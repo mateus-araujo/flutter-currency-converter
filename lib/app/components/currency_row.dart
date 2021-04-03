@@ -1,6 +1,20 @@
+import 'package:currency_converter/app/models/currency_model.dart';
 import 'package:flutter/material.dart';
 
 class CurrencyRow extends StatelessWidget {
+  final List<CurrencyModel> items;
+  final CurrencyModel selectedItem;
+  final TextEditingController controller;
+  final void Function(CurrencyModel? model)? onChanged;
+
+  const CurrencyRow({
+    Key? key,
+    required this.items,
+    required this.controller,
+    required this.selectedItem,
+    this.onChanged,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -8,8 +22,8 @@ class CurrencyRow extends StatelessWidget {
         Expanded(
           flex: 1,
           child: SizedBox(
-            height: 64,
-            child: DropdownButton(
+            height: 65,
+            child: DropdownButton<CurrencyModel>(
               iconEnabledColor: Colors.amber,
               iconSize: 30,
               isExpanded: true,
@@ -17,15 +31,16 @@ class CurrencyRow extends StatelessWidget {
                 height: 1,
                 color: Colors.amber,
               ),
-              items: <String>['Real', 'Dólar'].map<DropdownMenuItem<String>>(
-                (String value) {
+              items: items.map<DropdownMenuItem<CurrencyModel>>(
+                (CurrencyModel item) {
                   return DropdownMenuItem(
-                    child: Text(value),
-                    value: value,
+                    child: Text(item.name),
+                    value: item,
                   );
                 },
               ).toList(),
-              onChanged: (value) {},
+              onChanged: onChanged,
+              value: selectedItem,
             ),
           ),
         ),
@@ -33,6 +48,7 @@ class CurrencyRow extends StatelessWidget {
         Expanded(
           flex: 2,
           child: TextField(
+            controller: controller,
             decoration: InputDecoration(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.amber),
